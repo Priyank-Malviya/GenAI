@@ -5,6 +5,10 @@ __pycache__/
 *.so
 .Python
 
+# Environment Variables
+.env
+**/.env
+
 # Virtual Environment
 venv/
 env/

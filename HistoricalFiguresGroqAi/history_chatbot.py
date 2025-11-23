@@ -1,5 +1,5 @@
 """
-Space Exploration Chatbot
+Historical Figures Chatbot
 
 RAG-based chatbot using LangChain with:
 - PDF document ingestion and chunking
@@ -31,11 +31,11 @@ from langsmith import traceable
 load_dotenv()
 
 # Configurations
-PDF_FILE = os.getenv("PDF_FILE", "space_exploration.pdf")
+PDF_FILE = os.getenv("PDF_FILE", "historical_figures.pdf")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 LANGSMITH_API_KEY = os.getenv("LANGSMITH_API_KEY")
-LANGSMITH_PROJECT = os.getenv("LANGSMITH_PROJECT")
-LANGSMITH_TRACING = os.getenv("LANGSMITH_TRACING", "true").lower() == "true"
+LANGSMITH_PROJECT = os.getenv("LANGSMITH_PROJECT", "historical-figures-chatbot")
+LANGSMITH_TRACING = True
 
 def setup_langsmith_tracing():
     """Setup LangSmith tracing if API key is configured"""
@@ -62,8 +62,8 @@ class InMemoryChatMessageHistory(BaseChatMessageHistory):
         self.messages = []
 
 
-class SpaceExplorationChatbot:
-    """Space Exploration Chatbot with RAG pipeline using Groq LLM"""
+class HistoricalFiguresChatbot:
+    """Historical Figures Chatbot with RAG pipeline using Groq LLM"""
     
     def __init__(self):
         self.pdf_path = PDF_FILE
@@ -72,7 +72,7 @@ class SpaceExplorationChatbot:
         self.retriever = None
         self.tracing_enabled = setup_langsmith_tracing()
         
-        print("Space Exploration Chatbot - Initializing")
+        print("Historical Figures Chatbot - Initializing")
         print("-" * 60)
         
         try:
@@ -111,8 +111,8 @@ class SpaceExplorationChatbot:
         
         # Split documents
         splitter = CharacterTextSplitter(
-            chunk_size=120,
-            chunk_overlap=15,
+            chunk_size=200,
+            chunk_overlap=30,
             separator="\n"
         )
         self.documents = splitter.split_documents(documents)
@@ -132,7 +132,7 @@ class SpaceExplorationChatbot:
         self.vector_store = Chroma.from_documents(
             documents=self.documents,
             embedding=embeddings,
-            collection_name="space_missions",
+            collection_name="historical_figures",
             persist_directory="./chroma_db"
         )
         print("Vector store created")
@@ -166,9 +166,9 @@ class SpaceExplorationChatbot:
         print("Creating RAG chain...")
         
         # Custom prompt template with better context handling
-        prompt = ChatPromptTemplate.from_template("""You are SpaceBot, an expert guide to space exploration.
+        prompt = ChatPromptTemplate.from_template("""You are HistoryBot, an expert on historical figures.
 
-You have context information about space missions and astronomy.
+You have context information about historical figures, their lives, achievements, and impact on history.
 IMPORTANT: Only use the context if it is relevant to the question.
 If the context is not helpful or relevant, simply answer the question based on your knowledge.
 Do not force irrelevant information into your response.
@@ -196,7 +196,7 @@ Answer:""")
         )
         print("RAG chain created")
     
-    @traceable(name="space_chatbot_query")
+    @traceable(name="history_chatbot_query")
     def chat(self, user_message: str) -> str:
         """Process user message and return response"""
         try:
@@ -233,8 +233,8 @@ Answer:""")
         return "Chat history cleared."
 
 
-def create_gradio_interface(chatbot: SpaceExplorationChatbot):    
-    greeting = "Hello, I am SpaceBot, your guide to space exploration. Ask me about missions or astronomy!"
+def create_gradio_interface(chatbot: HistoricalFiguresChatbot):    
+    greeting = "Hello, I am HistoryBot, your expert on historical figures. How can I assist you today?"
     
     def process_query(user_input):
         if not user_input.strip():
@@ -248,12 +248,12 @@ def create_gradio_interface(chatbot: SpaceExplorationChatbot):
         return "", "", chatbot.get_history()
     
     with gr.Blocks(
-        title="Space Exploration Chatbot",
+        title="Historical Figures Chatbot",
         theme=gr.themes.Soft()
     ) as interface:
         gr.Markdown("""
-        # Space Exploration Chatbot
-        ## Your Guide to Space Missions and Astronomy
+        # Historical Figures Chatbot
+        ## Your Expert on Historical Figures
         """)
         
         gr.Markdown(f"*{greeting}*")
@@ -262,7 +262,7 @@ def create_gradio_interface(chatbot: SpaceExplorationChatbot):
             with gr.Column():
                 user_input = gr.Textbox(
                     label="Your Question",
-                    placeholder="Ask about Space Missions & Astronomy...",
+                    placeholder="Ask about Historical Figures...",
                     lines=3
                 )
                 submit_btn = gr.Button("Submit", variant="primary")
@@ -300,7 +300,7 @@ def create_gradio_interface(chatbot: SpaceExplorationChatbot):
 def main():
     try:
         # Initialize chatbot
-        chatbot = SpaceExplorationChatbot()
+        chatbot = HistoricalFiguresChatbot()
         
         # Create and launch Gradio interface
         print("Launching Gradio interface...")
