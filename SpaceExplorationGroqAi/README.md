@@ -207,7 +207,7 @@ Ensure you have a PDF file named `space_exploration.pdf` in the same folder, or 
 
 1. **Navigate to the project folder:**
    ```bash
-   cd /Users/admin/Desktop/Nick/GenAI/SpaceExplorationGroqAi
+   cd $HOME/{YOUR_LOCATION}/GenAI/SpaceExplorationGroqAi
    ```
 
 2. **Run the chatbot:**
