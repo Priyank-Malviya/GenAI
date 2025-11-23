@@ -1,0 +1,29 @@
+# LangChain Core and Framework
+langchain==0.3.7
+langchain-community==0.3.5
+langchain-core==0.3.15
+langchain-groq==0.2.1
+langchain-huggingface==0.1.2
+
+# Vector Database and Embeddings
+chromadb==0.5.20
+sentence-transformers==3.3.1
+
+# PDF Processing
+pypdf==5.1.0
+
+# Web Interface
+gradio==5.6.0
+
+# Environment Variables
+python-dotenv==1.0.1
+
+# Monitoring and Tracing
+langsmith==0.1.145
+
+# Additional Dependencies (installed automatically with above packages)
+# huggingface-hub
+# transformers
+# torch
+# numpy
+# pydantic
